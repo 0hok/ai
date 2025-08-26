@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My AI Bot</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+    #chat { width: 400px; height: 500px; background: #222; border-radius: 10px; padding: 10px; overflow-y: auto; }
+    .msg { margin: 5px 0; }
+    .user { color: #4CAF50; }
+    .bot { color: #FF4081; }
+    input { width: 400px; padding: 10px; margin-top: 10px; border-radius: 5px; border: none; }
+  </style>
+</head>
+<body>
+  <h1>AI Chat</h1>
+  <div id="chat"></div>
+  <input id="input" placeholder="Say something..." autocomplete="off">
+
+  <script>
+    const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+
+    function addMessage(text, cls) {
+      const div = document.createElement("div");
+      div.className = "msg " + cls;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    input.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter" && input.value.trim() !== "") {
+        const userMsg = input.value.trim();
+        addMessage("You: " + userMsg, "user");
+        input.value = "";
+
+        // Call your AI backend
+        const res = await fetch("YOUR_API_ENDPOINT", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userMsg })
+        });
+        const data = await res.json();
+
+        addMessage("Bot: " + data.reply, "bot");
+      }
+    });
+  </script>
+</body>
+</html>
